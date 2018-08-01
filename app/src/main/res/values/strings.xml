@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RoomExample</string>
+    <string name="hint_name">이름을 입력하세요</string>
+    <string name="hint_age">나이를 입력하세요</string>
+    <string name="hint_phone">전화번호를 입력하세요</string>
+    <string name="str_add">추가하기</string>
+    <string name="str_query">데이터 조회하기</string>
 </resources>
