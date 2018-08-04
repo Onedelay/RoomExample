@@ -13,6 +13,9 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     List<User> selectAll();
 
+    @Query("DELETE FROM User WHERE id = :id")
+    void deleteUser(long id);
+
     @Insert // onConflict default 3 : ABORT
     void insertAll(User... users);
 
