@@ -3,7 +3,7 @@ _**Room 을 사용하고싶은데 이해가 잘 안돼서 공식 사이트 문�
 ## RoomExample
 
 1. Room
-2. [LiveData](https://github.com/Onedelay/RoomExample/concepts/LiveData.md)
+2. [LiveData](https://github.com/Onedelay/RoomExample/blob/master/concepts/LiveData.md)
 3. ViewModel
 
 
