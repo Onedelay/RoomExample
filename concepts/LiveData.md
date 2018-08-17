@@ -46,3 +46,58 @@
 
    `LiveData` 객체를 싱글톤 패턴을 사용해 시스템 서비스를 감싸 확장하면 앱에서 공유할 수 있다. `LiveData` 객체는 시스템 서비스에 한번만 연결되고, 리소스가 필요한 모든 observer 는 `LiveData` 객체를 볼 수 있다. 자세한 내용은, [LiveData 확장](https://developer.android.com/topic/libraries/architecture/livedata#extend_livedata) 내용을 참조하면 된다.
 
+
+
+## MediatorLiveData
+
+public class MediatorLiveData 
+extends MutableLiveData<T> 
+
+java.lang.Object
+   ↳	android.arch.lifecycle.LiveData<T>
+ 	   ↳	android.arch.lifecycle.MutableLiveData<T>
+ 	 	   ↳	android.arch.lifecycle.MediatorLiveData<T>
+
+
+
+ 다른 `LiveData`  객체를 관찰하고  `onCahnged` 이벤트에 반응할 수 있는 `LiveData` 의 하위클래스이다.
+
+ 이 클래스는 활성, 비활성 상태를 원본 `LiveData` 객체로 올바르게 전달한다.
+
+ 다음 시나리오를 생각해보라.
+
+ `LiveData` 의 2가지 인스턴스를 가지고 있다. 이름을 `liveData1` 및 `liveData2` 로 지정하고, 하나의 객체인 `liveDataMerger` 에서 해당 데이터를 병합하고자 한다. 그런 다음 `liveData1` 과 `liveData2` 가 `MediatorLiveData` `liveDataMerger` 를 위한 원본이 될 것이고,  `onChanged` 콜백이 호출될 때마다 `liveDataMerger` 에 새로운 값을 설정한다.
+
+``` java
+ LiveData liveData1 = ...;
+ LiveData liveData2 = ...;
+
+ MediatorLiveData liveDataMerger = new MediatorLiveData<>();
+ liveDataMerger.addSource(liveData1, value ->  liveDataMerger.setValue(value));
+ liveDataMerger.addSource(liveData2, value ->  liveDataMerger.setValue(value));
+```
+
+ `liveData1` 에 의해 생성된 10개의 값만 `liveDataMerger` 에 병합되기를 원한다고 가정해보자. 그런 다음 10개의 값을 입력하면 `liveData1` 의 수신을 멈추고 소스로(?) 제거할 수 있다. (원본을 제거한다는 말일까?)
+
+```java
+liveDataMerger.addSource(liveData1, new Observer() {
+      private int count = 1;
+
+      @Override public void onChanged(@Nullable Integer s) {
+          count++;
+          liveDataMerger.setValue(s);
+          if (count > 10) {
+              liveDataMerger.removeSource(liveData1);
+          }
+      }
+ });
+```
+
+
+
+### Summary
+
+| Public methods |                                                              |
+| -------------- | ------------------------------------------------------------ |
+| `<S> void`     | `addSource(LiveData<S> source, Observer<S> onChanged)`<br>원본 `LiveData` 를 수신 대기하고, 원본 값이 변경되었을 때 observer의 `onChanged` 메소드가 호출된다. |
+| `<S> void`     | `removeSource(LiveData<S> toRemote)`<br /> `LiveData` 수신을 중지한다. |
