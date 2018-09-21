@@ -48,6 +48,28 @@
 
 
 
+### LiveData 와 함께하기
+
+`LiveData` 객체를 사용하기 위해 다음 절차를 수행하라.
+
+1. 특정 데이터 타입을 담기 위한 `LiveData` 객체를 생성한다. 이는 보통 `ViewModel` 클래스에서 수행한다.
+
+2. `onChanged()` 메서드를 정의한 옵저버 객체를 생성한다. `onChanged()` 메서드는 `LiveData` 객체가 유지하고있는 데이터에 변화가 감지되었을 때 제어한다. (변경된 데이터를 UI에 어떻게 적용할 지 구현하면 된다.) 보통 `Activity`와 `Fragment`와 같은 UI 컨트롤러에 `Observer` 객체를 생성한다.
+
+3. `LiveData`의 `observe()` 메소드를 사용하여 `Observer` 객체를 붙인다. `observe()` 메서드는 `LifecycleOwner` 객체를 파라미터로 받는다. `Observer` 객체를 `LiveData` 객체에 구독하여 변경사항을 알린다. 일반적으로 `Observer` 객체는 `Activity`와 `Fragment`와 같은 UI 컨트롤러에 연결한다.
+
+   > ★ Note : `observeForever (Observer)` 메서드를 사용하여 연관된 `LifecycleOwner` 객체 없이 `Observer`를 등록 할 수 있다. 이 경우, `Observer`는 계속 활성화된 상태가 되어 데이터의 변화를 항상 알린다. `removeObserver(Observer)` 메서드를 호출하면 이를 제거할 수 있다.
+
+`LiveData` 객체에 저장된 값을 업데이트할 때, 연결된 `LifecycleOwner`가 활성 상태에 있는 한 등록된 모든 observer가 트리거된다.
+
+`LiveData` 를 사용하면 UI 컨트롤러의 observer가 데이터의 변경사항을 구독하도록 할 수 있다. `LiveData` 객체가 가진 데이터가 변경되면, UI가 자동으로 업데이트된다.
+
+
+
+공식문서 번역이 아주 잘 되어있음 : http://dktfrmaster.blogspot.com/2018/02/livedata.html
+
+
+
 ## MediatorLiveData
 
 public class MediatorLiveData 
